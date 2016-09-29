@@ -42,14 +42,17 @@ def readParameters(file):
             codParameter=""
             valuesParameter=[]
             for col in row:
-                if colNum == 0:
+                if col[0] == '#':
+                    continue #Every row starting with that symbol is considered a comment
+                if colNum == 1:
                     codParameter = col
                 else:
-                    valuesParameter.append(col)
+                    if colNum % 2 == 0:#non-even columns especify the type of the previous data, not usefull in this module
+                        valuesParameter.append(col)
                 colNum += 1
             parameters[codParameter]=valuesParameter
             rowNum += 1
-            
+         
     return parameters
             
             
