@@ -8,6 +8,7 @@ Created on Mon Sep 26 15:42:53 2016
 """This is a function for reading the Licenses from a csv files"""
 import csv
 import Person
+import ConfParameters
 
 def readLicenses(file):
     
@@ -42,17 +43,19 @@ def readParameters(file):
             codParameter=""
             valuesParameter=[]
             for col in row:
-                if col[0] == '#':
+                if col == None or col == '' or col[0] == '#':
                     continue #Every row starting with that symbol is considered a comment
-                if colNum == 1:
+                if col == "str" or col == "int" or col == "float" or col == "date":
+                    continue #No need to know the type of the parameter here
+                if colNum == 0:
                     codParameter = col
                 else:
-                    if colNum % 2 == 0:#non-even columns especify the type of the previous data, not usefull in this module
+                    #if colNum % 2 == 0:#non-even columns especify the type of the previous data, not usefull in this module
                         valuesParameter.append(col)
                 colNum += 1
             parameters[codParameter]=valuesParameter
             rowNum += 1
-         
-    return parameters
+    clase = ConfParameters.ConfParameters(parameters)
+    return clase
             
             
