@@ -7,11 +7,13 @@ Created on Mon Sep 26 15:42:53 2016
 
 """This is a function for reading the Licenses from a csv files"""
 import csv
+import Logger
 import Person
 import Category
+import Rank
 import ConfParameters
 
-
+#TODO: make this into a class with at least configParameters as an attribute
 #Reads the licenses file
 def readLicenses(file):
     
@@ -27,7 +29,7 @@ def readLicenses(file):
                     if colNum != 0 and colNum != 11:
                         personData.append(col)
                     colNum += 1
-                """This last part needs to be fixed, aparently unpacking doesn't work"""
+                #TODO: This last part needs to be fixed, aparently unpacking doesn't work
                 licensedPeople[personData[0]]=Person.Person(*personData)
                 
             rowNum += 1
@@ -107,10 +109,12 @@ def readResults(file):
             colNum = 0
             
             for col in row:
-                
                 if colNum == 5:
-                    person = col
-                if colNum in [2,4,6,7]:
+                    if col == '' or col == None:
+                        Logger.logError(row[1] + ' ' + row[0] + ' ha competido sin tener licencia.', 1)
+                    else:
+                        person = col
+                if colNum in [2,3,4,6,7]:
                     result.append(col)
                 colNum += 1
 
@@ -148,3 +152,69 @@ def readOrganizers(file):
             rowNum += 1
             
     return organizers
+    
+
+#Reads the rank files for updating or showing them.
+def readRank(name):
+    data_list_ind = []
+    data_list_group = []
+    with open (name + '\\' + name + '_ind.csv', 'rb') as fRank:
+        reader = csv.reader(fRank)
+        rowNum = 0
+        for row in reader:
+            if rowNum == 0: #First row is just the headers
+                rowNum += 1
+                continue
+            data_row = []
+            
+            for col in row:
+                data_row.append(col)
+            
+            data_list_ind.append(data_row)
+            rowNum += 1
+    
+    with open ('\\' + name + '_club.csv', 'rb') as fRank:
+        reader = csv.reader(fRank)
+        rowNum = 0
+        for row in reader:
+            if rowNum == 0: #First row is just the headers
+                rowNum += 1
+                continue
+            data_row = []
+            
+            for col in row:
+                data_row.append(col)
+            
+            data_list_group.append(data_row)
+            rowNum += 1
+    
+    result = Rank.Rank(data_list_ind, data_list_group, None, None, None)
+    return result
+    
+def readPrevClubFile(self, file):
+    clubs_data = []
+    with open (file, 'rb') as fClubs:
+        reader = csv.reader(fClubs)
+        rowNum = 0
+        for row in reader:
+            if rowNum == 0: #First row is just the headers
+                rowNum += 1
+                continue
+            
+            data_row = []
+            if len(row) == 2:
+                data_row.append(0)
+                data_row.append(row[0])
+                data_row.append(row[1])
+                #TODO for variance in number of races
+                for i in range (0,25):
+                    data_row.append(0)
+            else:
+                data_row.append(0)
+                data_row.append(row[1])
+                data_row.append(row[2])
+                #TODO for variance in number of races
+                for i in range (0,25):
+                    data_row.append(0)
+                
+            

@@ -14,7 +14,7 @@ class Category:
         if parameters[2] == "SI":
             self.closed_group = True
         self.closed_group_file = parameters[3]
-        self.limit_simbol = parameters[4]
+        self.limit_symbol = parameters[4]
         self.age_limit = parameters[5]
         if self.age_limit != "":
             self.age_limit = int(self.age_limit)
