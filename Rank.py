@@ -27,11 +27,11 @@ class Rank:
             self.data_ind[self.dictCateg[person[2]]][person[1]] = person[2:]
          
         self.positions_club = {}
-        self.data_club = [[],[],[]]
+        self.data_club = [{},{},{}]
         self.club_division = {}
         for club in data_list_club:
             self.positions_club[club[1]] = club[0]
-            self.data_club[club[2]-1][club[1]] = club[2:]
+            self.data_club[int(club[2])-1][club[1]] = club[2:]
             self.club_division[club[1]] = club[2]
         
         self.configuration = configuration
@@ -60,7 +60,23 @@ class Rank:
         
         self.storeIndPoints(dict_people_valid_individual)
         
-    
+    def addOrganizers(self, organizers_dict, race_name):
+        for person in organizers_dict:
+            found = False
+            for category in self.data_ind:
+                if person in category.keys():
+                    index = 12
+                    for i in self.configuration.carreras:
+                        if i == race_name:
+                            break
+                        index += 1
+                    category[person][index] = organizers_dict[person]
+                    category[person][6] += 1
+                    found = True
+                    break
+            if not found:
+                return
+                
     def orderByCategory(self, results):  
         list_people_by_categories = []
         categories_index = {}
@@ -149,7 +165,6 @@ class Rank:
     def storeIndPoints(self, dict_checked_categories, race_name):
         
         for person in dict_checked_categories.keys():
-            self.data_ind[self.person_categ[person]][person][5] += dict_checked_categories[person]
             self.data_ind[self.person_categ[person]][person][6] += 1
             index = 10 #This is the index on the data for the first race
             for carrera in self.configuration.carreras:
@@ -158,9 +173,11 @@ class Rank:
                 index += 1
             self.data_ind[self.person_categ[person]][person][index] = dict_checked_categories[person]
             #TODO: Mirar lo de el parametro continuo/final
+            #TODO: Usar parametros num_carreras total
             self.data_ind[self.person_categ[person]][person][7] = self.calculateM1(person)
             self.data_ind[self.person_categ[person]][person][8] = self.calculateM2(person)
             self.data_ind[self.person_categ[person]][person][9] = self.calculateM3(person)
+            self.data_ind[self.person_categ[person]][person][5] = self.calculateTotalInd(person)
                 
                 
     def includePerson(self, lic_number, category):
@@ -183,29 +200,57 @@ class Rank:
     
     def calculateM1(self, person):
         max_scores = []
-        for i in range(0, self.configuration.num_carreras_media):
+        #TODO: Elite
+        num_carreras = self.configuration.num_carreras_media
+        if self.categories[self.data_ind[self.person_categ[person]][person][0]].is_elite:
+            num_carreras = self.configuration.num_carreras_media_elite
+        for i in range(0, num_carreras):
             max_scores.append(0)
         #TODO: FIx for variable number of races
         for i in range(10, len(self.configuration.carreras) + 10):
-            if self.data_ind[self.person_categ[person]][person][i] > min(max_scores):
-                max_scores[max_scores.index(min(max_scores))] = self.data_ind[self.person_categ[person]][person][i]
+            score = self.data_ind[self.person_categ[person]][person][i]
+            if type(score) is long or type(score) is int:
+                if score > min(max_scores):
+                    max_scores[max_scores.index(min(max_scores))] = score
         return numpy.mean(max_scores)
         
     def calculateM2(self, person):
         scores = []
         #TODO: FIx for variable number of races
         for i in range(10, len(self.configuration.carreras) + 10):
-            if self.data_ind[self.person_categ[person]][person][i] > self.configuration.putos_penalizacion:
-                scores.append(self.data_ind[self.person_categ[person]][person][i])
+            score = self.data_ind[self.person_categ[person]][person][i]
+            if type(score) is long or type(score) is int:
+                if score > self.configuration.putos_penalizacion:
+                    scores.append(score)
         return numpy.mean(scores)
         
     def calculateM3(self, person):
         scores = []
         #TODO: FIx for variable number of races
         for i in range(10, len(self.configuration.carreras) + 10):
-            if self.data_ind[self.person_categ[person]][person][i] > 0:
-                scores.append(self.data_ind[self.person_categ[person]][person][i])
+            score = self.data_ind[self.person_categ[person]][person][i]
+            if type(score) is long or type(score) is int:
+                if score > 0:
+                    scores.append(score)
         return numpy.mean(scores)
+        
+    def calculateTotalInd(self, person):
+        max_scores = []
+        num_carreras = self.configuration.num_carreras_total
+        if self.categories[self.data_ind[self.person_categ[person]][person][0]].is_elite:
+            num_carreras = self.configuration.num_carreras_total_elite
+        for i in range(0, num_carreras):
+            max_scores.append(0)
+        for i in range(10, len(self.configuration.carreras) + 10):
+            score = self.data_ind[self.person_categ[person]][person][i]
+            if type(score) is not long:
+                score = self.calculateM1(person)
+            if score > min(max_scores):
+                max_scores[max_scores.index(min(max_scores))] = score
+        result = 0
+        for i in max_scores:
+            result += i
+        return result
     
     def storeClubPoints(self, dict_person_points, race_name, results):
         people_by_categories = self.orderByCategory(results)

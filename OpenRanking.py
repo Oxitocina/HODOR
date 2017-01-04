@@ -33,6 +33,7 @@ class OpenRanking(wx.Frame):
         st1.SetFont(font)
         hbox1.Add(st1, flag=wx.RIGHT, border=8)
         self.tc = wx.TextCtrl(panel)
+        self.tc.SetValue('prueba_rankings')
         hbox1.Add(self.tc, proportion=1)
         vbox.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -43,6 +44,7 @@ class OpenRanking(wx.Frame):
         st2.SetFont(font)
         hbox2.Add(st2, flag=wx.RIGHT, border=8)
         self.tc2 = wx.TextCtrl(panel)
+        self.tc2.SetValue('Licencias2013.csv')
         hbox2.Add(self.tc2, proportion=1)
         vbox.Add(hbox2, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -54,6 +56,7 @@ class OpenRanking(wx.Frame):
         st3.SetFont(font)
         hbox3.Add(st3, flag=wx.RIGHT, border=8)
         self.tc3 = wx.TextCtrl(panel)
+        self.tc3.SetValue('categorias.csv')
         hbox3.Add(self.tc3, proportion=1)
         vbox.Add(hbox3, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -64,6 +67,7 @@ class OpenRanking(wx.Frame):
         st4.SetFont(font)
         hbox4.Add(st4, flag=wx.RIGHT, border=8)
         self.tc4 = wx.TextCtrl(panel)
+        self.tc4.SetValue('PruebaParametrosNuevo.csv')
         hbox4.Add(self.tc4, proportion=1)
         vbox.Add(hbox4, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -87,6 +91,7 @@ class OpenRanking(wx.Frame):
         self.GetParent().logic.setConfigParams(self.tc4.GetValue())
         self.GetParent().logic.setLicenses(self.tc2.GetValue())
         self.GetParent().logic.setCategories(self.tc3.GetValue())
+        self.GetParent().paintRanks()
         self.OnClose(None)
     def OnClose(self, e):
         self.Close(True) 

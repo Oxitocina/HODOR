@@ -94,6 +94,7 @@ class CreateRanking(wx.Frame):
         self.GetParent().logic.setLicenses(self.tc2.GetValue())
         self.GetParent().logic.setCategories(self.tc3.GetValue())
         self.GetParent().logic.createRanking(self.tc.GetValue(), self.tc6.GetValue())
+        self.GetParent().logic.currentRanking
         self.OnClose(None)
     def OnClose(self, e):
         self.Close(True) 

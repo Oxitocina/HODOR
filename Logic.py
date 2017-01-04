@@ -40,14 +40,14 @@ class Logic:
         
     def createRanking(self, rankName, clubFile):
         
-        if not os.path.exists(os.getcwd() + '\\' + rankName):
-            os.makedirs(os.getcwd() + '\\' + rankName)
+        if not os.path.exists(os.path.join(os.getcwd(), rankName)):
+            os.makedirs(os.path.join(os.getcwd(), rankName))
         else:
             return False
         club_data = InputReaders.readPrevClubFile(clubFile)
         newRanking = Rank.Rank([], club_data, self.configParameters, self.categories, self.licenses)
-        OutputWriters.writeIndRank(os.getcwd() + rankName + '\\' + rankName + '_ind.csv', newRanking , self.configParameters)
-        OutputWriters.writeClubRank(os.getcwd() + rankName + '\\' + rankName + '_club.csv', newRanking , self.configParameters)
+        OutputWriters.writeIndRank(os.path.join(os.getcwd(), rankName, rankName + '_ind.csv'), newRanking , self.configParameters)
+        OutputWriters.writeClubRank(os.path.join(os.getcwd(), rankName, rankName + '_club.csv'), newRanking , self.configParameters)
         self.current_ranking = newRanking
         return True
         
@@ -59,6 +59,10 @@ class Logic:
         self.orderRank()
         OutputWriters.writeIndRank(self.current_ranking)
         OutputWriters.writeClubRank(self.current_ranking)
+        
+    
+    def addOrganizers(self, org_file_name, race_name):
+        return
     
     def orderRank(self):
         #TODO: Ordenar el de grupos

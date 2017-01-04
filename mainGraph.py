@@ -12,6 +12,8 @@ import CreateRanking
 import OpenRanking
 import AddResults
 import AddOrganizers
+import EditConfig
+import SpreadSheet
 import Logic
 
 class MainGraph(wx.Frame):
@@ -19,6 +21,7 @@ class MainGraph(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(MainGraph, self).__init__(*args, **kwargs)
         self.logic = Logic.Logic()
+        self.notebook = wx.Notebook(self, -1, style=wx.RIGHT)
         self.InitUI()
     
     def InitUI(self):
@@ -62,6 +65,8 @@ class MainGraph(wx.Frame):
         self.Bind(wx.EVT_MENU, self.openRank, open_menu_opt)
         self.Bind(wx.EVT_MENU, self.addResults, add_res_menu_opt)
         self.Bind(wx.EVT_MENU, self.addOrganizers, add_organizers)
+        self.Bind(wx.EVT_MENU, self.editParameters, ed_params_menu_opt)        
+        
         
         self.Bind(wx.EVT_TOOL, self.createRank, new_tool)
         self.Bind(wx.EVT_TOOL, self.openRank, open_tool)
@@ -86,6 +91,35 @@ class MainGraph(wx.Frame):
     
     def addOrganizers(self, e):
         AddOrganizers.AddOrganizers(self)
+    
+    def editParameters(self, e):
+        EditConfig.EditConfig(self)
+        
+        
+    
+    def paintRanks(self):
+        ind_rank = []
+        club_rank = []
+        for category in self.logic.current_ranking.data_ind:
+            for person in category:
+                row = [self.logic.current_ranking.positions_ind, person]
+                for element in category[person]:
+                    row.append(element)
+                ind_rank.append(row)
+        sheet_ind = SpreadSheet.SpreadSheet(self.notebook, ind_rank)
+        
+        for division in self.logic.current_ranking.data_club:
+            for club in division:
+                row = [self.logic.current_ranking.positions_club, club]
+                for element in division[club]:
+                    row.append(element)
+                club_rank.append(row)
+        sheet_club = SpreadSheet.SpreadSheet(self.notebook, club_rank)
+        
+        self.notebook.AddPage(sheet_ind)
+        self.notebook.AddPage(sheet_club)
+        
+        
         
 def main():   
     ex = wx.App()

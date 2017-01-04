@@ -39,5 +39,7 @@ def writeClubRank(name, rankObj, conf):
             
             for i in range(1, len(data)+1):
                 wr.writerow(data[i])
+                
+
         
         

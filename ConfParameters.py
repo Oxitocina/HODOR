@@ -37,7 +37,6 @@ class ConfParameters:
         self.minimo_20 = float(dictionary.pop("minimo_20")[0])
         self.minimo_20aux = float(dictionary.pop("minimo_20aux")[0])
         self.coef_elite = float(dictionary.pop("coef_elite")[0])
-        self.coef_20a = float(dictionary.pop("coef_20a")[0])
         self.num_max_corredores = dictionary.pop("num_max_corredores")
         self.opcion_calculo_m1 = dictionary.pop("opcion_calculo_m1")
         self.opcion_ranking_individual = dictionary.pop("opcion_ranking_individual")

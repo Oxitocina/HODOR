@@ -7,12 +7,6 @@ Created on Tue Dec 20 19:41:15 2016
 
 import wx
 
-ID_NEW = 1
-ID_RENAME = 2
-ID_CLEAR = 3
-ID_DELETE = 4
-
-
 class AddResults(wx.Frame):
     def __init__(self, parent):
         super(AddResults, self).__init__(parent, size=(500,300))
@@ -33,8 +27,8 @@ class AddResults(wx.Frame):
         st1 = wx.StaticText(panel, label='Archivo de resultados: ')
         st1.SetFont(font)
         hbox1.Add(st1, flag=wx.RIGHT, border=8)
-        tc = wx.TextCtrl(panel)
-        hbox1.Add(tc, proportion=1)
+        self.tc = wx.TextCtrl(panel)
+        hbox1.Add(self.tc, proportion=1)
         vbox.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
         vbox.Add((-1,25))
 
@@ -45,23 +39,23 @@ class AddResults(wx.Frame):
         hbox2.Add((15,0))
         hbox2.Add(st2, flag=wx.CENTER)
         hbox2.Add((55,0))
-        listbox = wx.ListBox(panel, -1)
+        self.listbox = wx.ListBox(panel, -1)
         for race in self.GetParent().logic.configParameters.carreras:
-            listbox.Append(race)
-        hbox2.Add(listbox, flag=wx.EXPAND|wx.RIGHT)
+            self.listbox.Append(race)
+        hbox2.Add(self.listbox, flag=wx.EXPAND|wx.RIGHT)
         vbox.Add(hbox2, flag=wx.EXPAND|wx.BOTTOM|wx.RIGHT)        
         vbox.Add((-1, 25))
         
         hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         
-        cb1 = wx.CheckBox(panel, label='Carrera Internacional')
-        cb1.SetFont(font)
+        self.cb1 = wx.CheckBox(panel, label='Carrera Internacional')
+        self.cb1.SetFont(font)
         hbox3.Add((25,0))
-        hbox3.Add(cb1, flag=wx.RIGHT)
-        cb2 = wx.CheckBox(panel, label='No contar para ranking de clubes')
-        cb2.SetFont(font)
+        hbox3.Add(self.cb1, flag=wx.RIGHT)
+        self.cb2 = wx.CheckBox(panel, label='No contar para ranking de clubes')
+        self.cb2.SetFont(font)
         hbox3.Add((25,0))
-        hbox3.Add(cb2, flag=wx.LEFT)
+        hbox3.Add(self.cb2, flag=wx.LEFT)
         vbox.Add(hbox3, flag=wx.BOTTOM, border=10)
         vbox.Add((-1, 25))
         
@@ -72,5 +66,13 @@ class AddResults(wx.Frame):
         btn2 = wx.Button(panel, label='Cancelar', size=(70, 30))
         hbox4.Add(btn2, flag=wx.ALIGN_CENTER, border=5)
         vbox.Add(hbox4, flag=wx.ALIGN_CENTER, border=10)
+        
+        btn1.Bind(wx.EVT_BUTTON, self.update)
+        btn2.Bind(wx.EVT_BUTTON, self.Close)
 
         panel.SetSizer(vbox)
+        
+        
+    def update(self, e):
+        self.GetParent().logic.updateRanking(self.tc.GetValue(), self.listbox.GetSelection(), self.cb1.IsChecked(), self.cb2.IsChecked())
+        self.Close()
