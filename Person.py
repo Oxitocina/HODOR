@@ -9,19 +9,19 @@ Created on Mon Sep 26 15:54:39 2016
 
 class Person:
     
-    def __init__(self, licenseNum, categ, name, surname1, surname2, club, typeNIF,
-                 nif, idType, birthdate, dateRankShipment, sportId):
-                     self.licenseNum = licenseNum
+    def __init__(self, license_num, categ, name, surname1, surname2, club, type_NIF,
+                 nif, id_type, birthdate, date_rank_shipment, sport_id):
+                     self.license_num = license_num
                      self.categ = categ
                      self.name = name
                      self.surname1 = surname1
                      self.surname2 = surname2
                      self.club = club
-                     self.typeNIF = typeNIF
+                     self.type_NIF = type_NIF
                      self.nif = nif
-                     self.idType = idType
+                     self.id_type = id_type
                      self.birthdate = birthdate
-                     self.dateRankShipment = dateRankShipment
-                     self.sportId=sportId
+                     self.date_rank_shipment = date_rank_shipment
+                     self.sport_id=sport_id
     
     

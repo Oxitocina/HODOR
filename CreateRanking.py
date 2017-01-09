@@ -40,6 +40,7 @@ class CreateRanking(wx.Frame):
         st2.SetFont(font)
         hbox2.Add(st2, flag=wx.RIGHT, border=8)
         self.tc2 = wx.TextCtrl(panel)
+        self.tc2.SetValue('Licencias2016.csv')
         hbox2.Add(self.tc2, proportion=1)
         vbox.Add(hbox2, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -51,6 +52,7 @@ class CreateRanking(wx.Frame):
         st3.SetFont(font)
         hbox3.Add(st3, flag=wx.RIGHT, border=8)
         self.tc3 = wx.TextCtrl(panel)
+        self.tc3.SetValue('categorias.csv')
         hbox3.Add(self.tc3, proportion=1)
         vbox.Add(hbox3, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -61,6 +63,7 @@ class CreateRanking(wx.Frame):
         st4.SetFont(font)
         hbox4.Add(st4, flag=wx.RIGHT, border=8)
         self.tc4 = wx.TextCtrl(panel)
+        self.tc4.SetValue('PruebaParametrosNuevo.csv')
         hbox4.Add(self.tc4, proportion=1)
         vbox.Add(hbox4, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -72,6 +75,7 @@ class CreateRanking(wx.Frame):
         st6.SetFont(font)
         hbox6.Add(st6, flag=wx.RIGHT, border=8)
         self.tc6 = wx.TextCtrl(panel)
+        self.tc6.SetValue('prueba_rankings_club.csv')
         hbox6.Add(self.tc6, proportion=1)
         vbox.Add(hbox6, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -86,7 +90,7 @@ class CreateRanking(wx.Frame):
         vbox.Add(hbox5, flag=wx.ALIGN_CENTER|wx.RIGHT, border=10)
         
         btn1.Bind(wx.EVT_BUTTON, self.create)
-        btn2.Bind(wx.EVT_BUTTON, self.OnClose)
+        btn2.Bind(wx.EVT_BUTTON, self.Close)
         panel.SetSizer(vbox)
 
     def create(self, e):
@@ -94,7 +98,5 @@ class CreateRanking(wx.Frame):
         self.GetParent().logic.setLicenses(self.tc2.GetValue())
         self.GetParent().logic.setCategories(self.tc3.GetValue())
         self.GetParent().logic.createRanking(self.tc.GetValue(), self.tc6.GetValue())
-        self.GetParent().logic.currentRanking
-        self.OnClose(None)
-    def OnClose(self, e):
-        self.Close(True) 
+        self.GetParent().paintRanks()
+        self.Close(True)

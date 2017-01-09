@@ -9,7 +9,7 @@ import wx
 
 class AddResults(wx.Frame):
     def __init__(self, parent):
-        super(AddResults, self).__init__(parent, size=(500,300))
+        super(AddResults, self).__init__(parent, size=(500,425))
             
         self.InitUI()
         self.Centre()
@@ -28,6 +28,7 @@ class AddResults(wx.Frame):
         st1.SetFont(font)
         hbox1.Add(st1, flag=wx.RIGHT, border=8)
         self.tc = wx.TextCtrl(panel)
+        self.tc.SetValue('prueba_resultados.csv')
         hbox1.Add(self.tc, proportion=1)
         vbox.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
         vbox.Add((-1,25))
@@ -40,7 +41,7 @@ class AddResults(wx.Frame):
         hbox2.Add(st2, flag=wx.CENTER)
         hbox2.Add((55,0))
         self.listbox = wx.ListBox(panel, -1)
-        for race in self.GetParent().logic.configParameters.carreras:
+        for race in self.GetParent().logic.config_parameters.carreras:
             self.listbox.Append(race)
         hbox2.Add(self.listbox, flag=wx.EXPAND|wx.RIGHT)
         vbox.Add(hbox2, flag=wx.EXPAND|wx.BOTTOM|wx.RIGHT)        
@@ -68,11 +69,16 @@ class AddResults(wx.Frame):
         vbox.Add(hbox4, flag=wx.ALIGN_CENTER, border=10)
         
         btn1.Bind(wx.EVT_BUTTON, self.update)
-        btn2.Bind(wx.EVT_BUTTON, self.Close)
+        btn2.Bind(wx.EVT_BUTTON, self.OnClose)
 
         panel.SetSizer(vbox)
         
         
     def update(self, e):
-        self.GetParent().logic.updateRanking(self.tc.GetValue(), self.listbox.GetSelection(), self.cb1.IsChecked(), self.cb2.IsChecked())
-        self.Close()
+        self.GetParent().logic.updateRanking(self.tc.GetValue(), self.listbox.GetStringSelection(), self.cb1.IsChecked(), self.cb2.IsChecked())
+        self.GetParent().paintRanks()
+        self.OnClose(None)
+    
+    def OnClose(self, e):
+        self.Close(True) 
+    

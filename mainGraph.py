@@ -21,7 +21,7 @@ class MainGraph(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(MainGraph, self).__init__(*args, **kwargs)
         self.logic = Logic.Logic()
-        self.notebook = wx.Notebook(self, -1, style=wx.RIGHT)
+        
         self.InitUI()
     
     def InitUI(self):
@@ -31,7 +31,6 @@ class MainGraph(wx.Frame):
         self.sb = self.CreateStatusBar()
         
         
-        
         ranking_menu = wx.Menu()
         edit_menu = wx.Menu()
         statistics_menu = wx.Menu()
@@ -39,6 +38,7 @@ class MainGraph(wx.Frame):
         
         new_tool = toolbar.AddLabelTool(wx.ID_FILE, 'New', wx.Bitmap(os.getcwd() + '\\images\\new_rank.png'))
         open_tool = toolbar.AddLabelTool(wx.ID_OPEN, 'Open', wx.Bitmap(os.getcwd() + '\\images\\open_rank.png'))
+        add_tool = toolbar.AddLabelTool(wx.ID_ADD, 'Add results', wx.Bitmap(os.getcwd() + '\\images\\add_results.png'))        
         
         new_menu_opt = ranking_menu.Append(wx.ID_FILE, 'Nuevo ranking', 'Crea nuevo ranking')
         open_menu_opt = ranking_menu.Append(wx.ID_OPEN, 'Abrir ranking', 'Abre un ranking existente')
@@ -70,7 +70,13 @@ class MainGraph(wx.Frame):
         
         self.Bind(wx.EVT_TOOL, self.createRank, new_tool)
         self.Bind(wx.EVT_TOOL, self.openRank, open_tool)
+        self.Bind(wx.EVT_TOOL, self.addResults, add_tool)
         
+        box = wx.BoxSizer(wx.HORIZONTAL)
+        self.notebook = wx.Notebook(self, -1, style=wx.BOTTOM)
+        box.Add((5,5) , 0)
+        box.Add(self.notebook, 1, wx.EXPAND)
+        self.SetSizer(box)
         self.SetSize((1200,700))
         self.SetTitle('HODOR')
         self.Centre()
@@ -101,23 +107,37 @@ class MainGraph(wx.Frame):
         ind_rank = []
         club_rank = []
         for category in self.logic.current_ranking.data_ind:
-            for person in category:
-                row = [self.logic.current_ranking.positions_ind, person]
-                for element in category[person]:
+            for position in range(1,len(category.keys())+1):
+                actual_person = ''
+                for person in category.keys():
+                    if int(self.logic.current_ranking.positions_ind[person]) == position:
+                        actual_person = person
+                row = [self.logic.current_ranking.positions_ind[actual_person], actual_person]
+                for element in category[actual_person]:
                     row.append(element)
                 ind_rank.append(row)
-        sheet_ind = SpreadSheet.SpreadSheet(self.notebook, ind_rank)
+        sheet_ind = SpreadSheet.SpreadSheet(self.notebook, ind_rank,
+                                            self.logic.config_parameters.cabecera_ranking_individual[0:12] +
+                                            self.logic.config_parameters.carreras +
+                                            self.logic.config_parameters.cabecera_ranking_individual[12:])
         
         for division in self.logic.current_ranking.data_club:
-            for club in division:
-                row = [self.logic.current_ranking.positions_club, club]
-                for element in division[club]:
-                    row.append(element)
-                club_rank.append(row)
-        sheet_club = SpreadSheet.SpreadSheet(self.notebook, club_rank)
+            for position in range(1,len(division.keys())+1):
+                actual_club = ''
+                for club in division.keys():
+                    if int(self.logic.current_ranking.positions_club[club]) == position:
+                        actual_club = club
+                if actual_club != '':
+                    row = [self.logic.current_ranking.positions_club[actual_club], actual_club]
+                    for element in division[actual_club]:
+                        row.append(element)
+                    club_rank.append(row)
+        sheet_club = SpreadSheet.SpreadSheet(self.notebook, club_rank,
+                                             self.logic.config_parameters.cabecera_ranking_clubes[0:5] +
+                                             self.logic.config_parameters.carreras)
         
-        self.notebook.AddPage(sheet_ind)
-        self.notebook.AddPage(sheet_club)
+        self.notebook.AddPage(sheet_ind, 'Individual')
+        self.notebook.AddPage(sheet_club, 'Grupos')
         
         
         

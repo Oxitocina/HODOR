@@ -45,8 +45,10 @@ class AddOrganizers(wx.Frame):
         hbox2.Add((15,0))
         hbox2.Add(st2, flag=wx.CENTER)
         hbox2.Add((55,0))
-        listbox = wx.ListBox(panel, -1)
-        hbox2.Add(listbox, flag=wx.EXPAND|wx.RIGHT)
+        self.listbox = wx.ListBox(panel, -1)
+        for race in self.GetParent().logic.config_parameters.carreras:
+            self.listbox.Append(race)
+        hbox2.Add(self.listbox, flag=wx.EXPAND|wx.RIGHT)
         vbox.Add(hbox2, flag=wx.EXPAND|wx.BOTTOM|wx.RIGHT)        
         vbox.Add((-1, 25))
         

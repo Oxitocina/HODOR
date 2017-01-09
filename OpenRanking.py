@@ -44,7 +44,7 @@ class OpenRanking(wx.Frame):
         st2.SetFont(font)
         hbox2.Add(st2, flag=wx.RIGHT, border=8)
         self.tc2 = wx.TextCtrl(panel)
-        self.tc2.SetValue('Licencias2013.csv')
+        self.tc2.SetValue('Licencias2016.csv')
         hbox2.Add(self.tc2, proportion=1)
         vbox.Add(hbox2, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
 
@@ -87,12 +87,15 @@ class OpenRanking(wx.Frame):
         panel.SetSizer(vbox)
     
     def abrir(self, e):
-        self.GetParent().logic.openRanking(self.tc.GetValue())
+        
         self.GetParent().logic.setConfigParams(self.tc4.GetValue())
         self.GetParent().logic.setLicenses(self.tc2.GetValue())
         self.GetParent().logic.setCategories(self.tc3.GetValue())
+        self.GetParent().logic.openRanking(self.tc.GetValue())
         self.GetParent().paintRanks()
         self.OnClose(None)
+        
+        
     def OnClose(self, e):
         self.Close(True) 
     
